@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { environment } from '../../../environments/environment';
 import { OCR_REQUEST_TIMEOUT_MS, OcrApiService } from './ocr-api.service';
 
 describe('OcrApiService', () => {
@@ -19,7 +20,7 @@ describe('OcrApiService', () => {
     let result: string | undefined;
     service.extractText(file).subscribe((text) => (result = text));
 
-    const req = http.expectOne('http://localhost:3000/api/ocr');
+    const req = http.expectOne(`${environment.apiUrl}/api/ocr`);
     expect(req.request.body).toBeInstanceOf(FormData);
     expect((req.request.body as FormData).get('image')).toBeInstanceOf(File);
     req.flush({ text: 'abc' });
@@ -31,7 +32,7 @@ describe('OcrApiService', () => {
     let message = '';
     service.extractText(file).subscribe({ error: (e: Error) => (message = e.message) });
     http
-      .expectOne('http://localhost:3000/api/ocr')
+      .expectOne(`${environment.apiUrl}/api/ocr`)
       .flush({ error: { message: 'Too big' } }, { status: 413, statusText: 'Payload' });
     expect(message).toBe('Too big');
   });
@@ -39,7 +40,7 @@ describe('OcrApiService', () => {
   it('falls back to a generic message for unexpected responses', () => {
     let message = '';
     service.extractText(file).subscribe({ error: (e: Error) => (message = e.message) });
-    http.expectOne('http://localhost:3000/api/ocr').flush('oops', { status: 500, statusText: 'Err' });
+    http.expectOne(`${environment.apiUrl}/api/ocr`).flush('oops', { status: 500, statusText: 'Err' });
     expect(message).toContain('Something went wrong');
   });
 
@@ -54,7 +55,7 @@ describe('OcrApiService', () => {
     it('fails with a friendly message and cancels the request after 35 seconds', () => {
       let message = '';
       service.extractText(file).subscribe({ error: (e: Error) => (message = e.message) });
-      const req = http.expectOne('http://localhost:3000/api/ocr');
+      const req = http.expectOne(`${environment.apiUrl}/api/ocr`);
 
       vi.advanceTimersByTime(OCR_REQUEST_TIMEOUT_MS - 1);
       expect(message).toBe('');
@@ -74,7 +75,7 @@ describe('OcrApiService', () => {
       });
 
       vi.advanceTimersByTime(OCR_REQUEST_TIMEOUT_MS - 1000);
-      http.expectOne('http://localhost:3000/api/ocr').flush({ text: 'late but fine' });
+      http.expectOne(`${environment.apiUrl}/api/ocr`).flush({ text: 'late but fine' });
       vi.advanceTimersByTime(OCR_REQUEST_TIMEOUT_MS * 2);
 
       expect(result).toBe('late but fine');

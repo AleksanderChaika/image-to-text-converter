@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { environment } from '../../../environments/environment';
 import { FILE_TOO_LARGE_ERROR, MAX_IMAGE_SIZE_BYTES } from '../../core/utils/image-validation';
 import { ConverterPage } from './converter-page';
 
@@ -95,14 +96,14 @@ describe('ConverterPage', () => {
       await select(png());
       await extract();
 
-      const req = http.expectOne('http://localhost:3000/api/ocr');
+      const req = http.expectOne(`${environment.apiUrl}/api/ocr`);
       expect(req.request.method).toBe('POST');
       expect((req.request.body as FormData).get('image')).toBeInstanceOf(File);
       expect(extractButton().disabled).toBe(true);
       expect(extractButton().textContent).toContain('Extracting');
 
       extractButton().click();
-      http.expectNone('http://localhost:3000/api/ocr');
+      http.expectNone(`${environment.apiUrl}/api/ocr`);
 
       req.flush({ text: 'Hello world' });
       await fixture.whenStable();
@@ -118,7 +119,7 @@ describe('ConverterPage', () => {
       await extract();
 
       http
-        .expectOne('http://localhost:3000/api/ocr')
+        .expectOne(`${environment.apiUrl}/api/ocr`)
         .flush({ error: { message: 'Quota exceeded' } }, { status: 429, statusText: 'Too Many' });
       await fixture.whenStable();
 
@@ -131,7 +132,7 @@ describe('ConverterPage', () => {
       await select(png());
       await extract();
 
-      http.expectOne('http://localhost:3000/api/ocr').error(new ProgressEvent('error'));
+      http.expectOne(`${environment.apiUrl}/api/ocr`).error(new ProgressEvent('error'));
       await fixture.whenStable();
 
       expect(el.querySelector('.converter__error')?.textContent).toContain('Cannot reach the server');
@@ -141,7 +142,7 @@ describe('ConverterPage', () => {
       const http = TestBed.inject(HttpTestingController);
       await select(png());
       await extract();
-      const req = http.expectOne('http://localhost:3000/api/ocr');
+      const req = http.expectOne(`${environment.apiUrl}/api/ocr`);
 
       el.querySelector<HTMLButtonElement>('.preview__remove')!.click();
       await fixture.whenStable();
@@ -157,7 +158,7 @@ describe('ConverterPage', () => {
       vi.useFakeTimers();
       try {
         extractButton().click();
-        http.expectOne('http://localhost:3000/api/ocr');
+        http.expectOne(`${environment.apiUrl}/api/ocr`);
         vi.advanceTimersByTime(35_000);
       } finally {
         vi.useRealTimers();
@@ -173,7 +174,7 @@ describe('ConverterPage', () => {
       const http = TestBed.inject(HttpTestingController);
       await select(png());
       await extract();
-      http.expectOne('http://localhost:3000/api/ocr').flush({ text: '' });
+      http.expectOne(`${environment.apiUrl}/api/ocr`).flush({ text: '' });
       await fixture.whenStable();
 
       expect(el.textContent).toContain('No text was found in this image.');
