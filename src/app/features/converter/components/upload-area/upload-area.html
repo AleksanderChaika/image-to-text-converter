@@ -1,0 +1,36 @@
+<div class="upload">
+  <label
+    class="upload__zone"
+    [class.upload__zone--dragging]="dragging()"
+    [class.upload__zone--error]="error()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+  >
+    <input
+      class="upload__input"
+      type="file"
+      accept="image/jpeg,image/png"
+      [attr.aria-describedby]="error() ? 'upload-error' : 'upload-limits'"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      (change)="onInputChange($event)"
+    />
+
+    <svg class="upload__icon" viewBox="0 0 24 24" width="48" height="48" fill="none"
+         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+      <path d="M12 16V4" />
+      <path d="M7 9l5-5 5 5" />
+      <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3" />
+    </svg>
+
+    <span class="upload__title">Drag &amp; drop an image here</span>
+    <span class="upload__hint">or click to browse</span>
+  </label>
+
+  @if (error(); as message) {
+    <p id="upload-error" class="upload__error" role="alert">{{ message }}</p>
+  }
+
+  <p id="upload-limits" class="upload__limits">Supported formats: JPG, PNG. Maximum size: 2 MB.</p>
+</div>

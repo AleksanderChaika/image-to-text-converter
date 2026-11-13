@@ -1,0 +1,11 @@
+node_modules/
+dist/
+
+# Секреты и локальная конфигурация — никогда не коммитить
+.env
+.env.*
+!.env.example
+*-key.json
+*credentials*.json
+service-account*.json
+application_default_credentials.json

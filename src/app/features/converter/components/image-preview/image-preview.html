@@ -1,0 +1,26 @@
+<figure class="preview">
+  <div class="preview__frame">
+    @if (src(); as url) {
+      <img class="preview__image" [src]="url" [alt]="'Preview of ' + (fileName() ?? 'selected image')" />
+    } @else {
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="9" cy="9" r="1.5" />
+        <path d="M21 15l-5-5L5 21" />
+      </svg>
+      <span>Image preview will appear here</span>
+    }
+  </div>
+
+  <figcaption class="preview__caption">
+    @if (src()) {
+      <span class="preview__name">{{ fileName() }}</span>
+      <button type="button" class="btn btn--secondary preview__remove" (click)="remove.emit()">
+        Remove image
+      </button>
+    } @else {
+      Preview
+    }
+  </figcaption>
+</figure>

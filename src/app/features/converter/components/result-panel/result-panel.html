@@ -1,0 +1,39 @@
+<section class="result" aria-labelledby="result-title" [attr.aria-busy]="loading()">
+  <div class="result__header">
+    <h2 id="result-title" class="result__title">Extracted text</h2>
+    <button type="button" class="btn btn--secondary" [disabled]="!text()" (click)="copyText()">
+      @switch (copyState()) {
+        @case ('copied') {
+          Copied!
+        }
+        @case ('failed') {
+          Copy failed
+        }
+        @default {
+          Copy Text
+        }
+      }
+    </button>
+  </div>
+
+  <textarea
+    class="result__text"
+    readonly
+    rows="8"
+    [placeholder]="
+      loading() ? 'Extracting text…' : 'The extracted text will appear here.'
+    "
+    [value]="text() ?? ''"
+    aria-labelledby="result-title"
+  ></textarea>
+
+  <p class="result__status" role="status">
+    @if (text() === '') {
+      No text was found in this image.
+    } @else if (copyState() === 'copied') {
+      Text copied to clipboard.
+    } @else if (copyState() === 'failed') {
+      Could not copy automatically. Select the text and copy it manually.
+    }
+  </p>
+</section>

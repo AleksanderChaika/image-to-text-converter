@@ -1,0 +1,38 @@
+<article class="converter">
+  <header class="converter__hero">
+    <h1 class="converter__title">Image to Text Converter</h1>
+    <p class="converter__subtitle">Upload an image and extract text from it in seconds.</p>
+  </header>
+
+  <section class="converter__card" aria-label="Image upload">
+    <app-upload-area [error]="error()" (fileSelected)="onFileSelected($event)" />
+    <app-image-preview
+      [src]="previewUrl()"
+      [fileName]="selectedFile()?.name ?? null"
+      (remove)="onRemoveImage()"
+    />
+
+    <div class="converter__actions">
+      <button
+        type="button"
+        class="btn btn--primary"
+        [disabled]="!canExtract()"
+        [attr.aria-busy]="isExtracting()"
+        (click)="onExtractText()"
+      >
+        @if (isExtracting()) {
+          <span class="converter__spinner" aria-hidden="true"></span>
+          Extracting…
+        } @else {
+          Extract Text
+        }
+      </button>
+    </div>
+
+    @if (extractError(); as message) {
+      <p class="converter__error" role="alert">{{ message }}</p>
+    }
+  </section>
+
+  <app-result-panel [text]="extractedText()" [loading]="isExtracting()" />
+</article>

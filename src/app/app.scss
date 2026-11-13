@@ -1,0 +1,7 @@
+main {
+  padding-block: var(--space-8);
+
+  @media (max-width: 600px) {
+    padding-block: var(--space-6);
+  }
+}
