@@ -1,5 +1,13 @@
 # Image to Text Converter
 
+## Demo
+
+**Live demo:** https://image-to-text-converter-one.vercel.app/
+
+**Source code:** https://github.com/AleksanderChaika/image-to-text-converter
+
+The frontend is hosted on Vercel and the backend on Google Cloud Run.
+
 A web app that extracts text from images. Upload a JPG or PNG, preview it, recognize the text with Google Cloud Vision, and copy the result to the clipboard.
 
 The Angular frontend talks to a small Express backend, which calls Google Cloud Vision, so Google credentials never reach the browser. Google Cloud Vision is used instead of the example API Ninjas mentioned in the task.
@@ -10,9 +18,10 @@ The Angular frontend talks to a small Express backend, which calls Google Cloud 
 |------|-----|
 | Backend API | https://image-to-text-converter-api-94303392854.europe-west3.run.app |
 | Health check | https://image-to-text-converter-api-94303392854.europe-west3.run.app/api/health (returns `{"status":"ok"}`) |
-| Frontend | _Not published yet. The public link will be added here._ |
+| Frontend (Vercel) | https://image-to-text-converter-one.vercel.app/ |
+| Repository | https://github.com/AleksanderChaika/image-to-text-converter |
 
-The backend is deployed on Google Cloud Run. The frontend in this repository is already configured to use it (see [Configuration](#configuration)).
+The frontend is deployed on Vercel and the backend on Google Cloud Run. The frontend in this repository is configured to use the Cloud Run backend (see [Configuration](#configuration)).
 
 ## Features
 
@@ -98,7 +107,7 @@ Backend variables are read from the shell environment (`.env` files are **not** 
 
 The frontend reads the backend address from `apiUrl` in `src/environments/environment.ts` (currently the Cloud Run URL above, without a trailing slash); change it to use a local backend or if you change `PORT`. The frontend tests use the same value, so they pass with any `apiUrl`.
 
-On Cloud Run, `PORT` is set by the platform. When the frontend is published, add its origin (for example `https://your-frontend.example`, no path or trailing slash) to `CORS_ORIGINS` on the Cloud Run service. Only `localhost`, `127.0.0.1` and `[::1]` over `http` are allowed by default.
+On Cloud Run, `PORT` is set by the platform. To use a hosted frontend such as the Vercel deployment, add its origin (for example `https://your-frontend.example`, no path or trailing slash) to `CORS_ORIGINS` on the Cloud Run service. Only `localhost`, `127.0.0.1` and `[::1]` over `http` are allowed by default.
 
 ## Tests and build
 
